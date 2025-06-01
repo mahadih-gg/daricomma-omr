@@ -1,6 +1,8 @@
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { StoreProvider } from '@/providers/StoreProvider';
+import { useAuth } from '@/store/authStore';
+import tamaguiConfig from '@/tamagui.config';
 import { NotoSansBengali_100Thin } from '@expo-google-fonts/noto-sans-bengali/100Thin';
 import { NotoSansBengali_200ExtraLight } from '@expo-google-fonts/noto-sans-bengali/200ExtraLight';
 import { NotoSansBengali_300Light } from '@expo-google-fonts/noto-sans-bengali/300Light';
@@ -12,17 +14,18 @@ import { NotoSansBengali_800ExtraBold } from '@expo-google-fonts/noto-sans-benga
 import { NotoSansBengali_900Black } from '@expo-google-fonts/noto-sans-bengali/900Black';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { SplashScreen, Stack } from 'expo-router';
 import Head from "expo-router/head";
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import { TamaguiProvider } from 'tamagui';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  let [fontsLoaded] = useFonts({
+  let [fontsLoaded, fontError] = useFonts({
     NotoSansBengali_100Thin,
     NotoSansBengali_200ExtraLight,
     NotoSansBengali_300Light,
@@ -37,20 +40,33 @@ export default function RootLayout() {
   // Simplified web font handling - moved before conditional return
   useEffect(() => {
     if (Platform.OS === "web") {
-      const linkId = "google-font-kanit";
+      const linkId = "google-font-noto-sans";
       if (!document.getElementById(linkId)) {
         const link = document.createElement("link");
         link.id = linkId;
         link.rel = "stylesheet";
         link.href =
-          "https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap";
+          "https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap";
         document.head.appendChild(link);
       }
     }
   }, []);
 
+  const AppContent = ({ children }: { children: ReactNode }) => {
+    const { isLoadingUser } = useAuth();
+
+    useEffect(() => {
+      if ((fontsLoaded || fontError) && !isLoadingUser) {
+        setTimeout(async () => {
+          await SplashScreen.hideAsync();
+        }, 100);
+      }
+    }, [fontsLoaded, fontError, isLoadingUser]);
+
+    return <>{children}</>;
+  };
+
   if (!fontsLoaded) {
-    // Async font loading only occurs in development.
     return null;
   }
 
@@ -65,16 +81,19 @@ export default function RootLayout() {
       )}
       <QueryProvider>
         <StoreProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-          </ThemeProvider>
+          <TamaguiProvider config={tamaguiConfig}>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <AppContent>
+                <Stack>
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+                <StatusBar style="auto" />
+              </AppContent>
+            </ThemeProvider>
+          </TamaguiProvider>
         </StoreProvider>
       </QueryProvider>
-
-    </GestureHandlerRootView >
+    </GestureHandlerRootView>
   );
 }
