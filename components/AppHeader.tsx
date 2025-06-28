@@ -1,35 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-interface AppHeaderProps {
-  title?: string;
-}
-
-export default function AppHeader({ title = 'Home' }: AppHeaderProps) {
+const AppHeader = () => {
   return (
     <View style={styles.header}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>ড্যাশবোর্ড</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  header: {
-    height: 60,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
-  },
-}); 
+  header: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  title: { fontWeight: 'bold', fontSize: 24, letterSpacing: 1 },
+});
+
+export default AppHeader; 

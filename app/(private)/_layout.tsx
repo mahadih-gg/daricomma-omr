@@ -1,9 +1,5 @@
-import { Stack } from 'expo-router';
+import DashboardLayout from '../../layouts/DashboardLayout';
 
-export default function PrivateLayout() {
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-    </Stack>
-  );
+export default function PrivateLayout({ children }: { children: React.ReactNode }) {
+  return <DashboardLayout>{children}</DashboardLayout>;
 } 

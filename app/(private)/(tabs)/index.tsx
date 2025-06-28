@@ -1,75 +1,32 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const Dashboard = () => {
+  const { width } = useWindowDimensions();
+  const isMobile = width < 900;
 
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={[styles.container, isMobile && { padding: 12 }]}>
+        <Text style={styles.header}>ড্যাশবোর্ড</Text>
+        <TextInput style={styles.searchBar} placeholder="Search..." />
+        <View style={[styles.cardsRow, isMobile && { flexDirection: 'column', gap: 12 }]}>
+          <View style={styles.card}><Text>Card 1</Text></View>
+          <View style={styles.card}><Text>Card 2</Text></View>
+        </View>
+        <View style={styles.largeCard}><Text>Large Card (e.g. table, chart, etc.)</Text></View>
+      </View>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+  container: { flex: 1, padding: 24 },
+  header: { fontSize: 28, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
+  searchBar: { height: 40, borderRadius: 8, borderWidth: 1, borderColor: '#ccc', paddingHorizontal: 16, marginBottom: 20 },
+  cardsRow: { flexDirection: 'row', gap: 16, marginBottom: 16 },
+  card: { flex: 1, backgroundColor: '#f7f7f7', borderRadius: 12, padding: 24, alignItems: 'center', marginRight: 0 },
+  largeCard: { backgroundColor: '#f7f7f7', borderRadius: 12, padding: 32, alignItems: 'center' },
 });
+
+export default Dashboard;

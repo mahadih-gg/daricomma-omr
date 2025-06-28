@@ -1,110 +1,84 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+const OmrDownload = () => {
+  const { width } = useWindowDimensions();
+  const isMobile = width < 900;
 
-export default function TabTwoScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={[styles.container, isMobile && { flexDirection: 'column', gap: 24 }]}>
+        {/* Left Card: Exam Info */}
+        <View style={[styles.card, styles.leftCard, isMobile && { width: '100%' }]}>
+          <View style={styles.cardHeaderRow}>
+            <Text style={styles.cardTitle}>OMR ডাউনলোড</Text>
+            <View style={styles.languageToggleRow}>
+              <TouchableOpacity style={styles.languageBtn}><Text style={styles.languageBtnText}>Bangla</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.languageBtn}><Text style={styles.languageBtnText}>English</Text></TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.infoFields}>
+            <View style={styles.infoFieldRow}><Text style={styles.infoLabel}>পরীক্ষার নাম:</Text><View style={styles.underline} /></View>
+            <View style={styles.infoFieldRow}><Text style={styles.infoLabel}>বিষয়:</Text><View style={styles.underline} /></View>
+            <View style={styles.infoFieldRow}><Text style={styles.infoLabel}>শ্রেণি:</Text><View style={styles.underline} /></View>
+            <View style={styles.infoFieldRow}><Text style={styles.infoLabel}>রোল:</Text><View style={styles.underline} /></View>
+            <View style={styles.infoFieldRow}><Text style={styles.infoLabel}>তারিখ:</Text><View style={styles.underline} /></View>
+            <View style={styles.infoFieldRow}><Text style={styles.infoLabel}>মোট প্রশ্ন:</Text><Text style={styles.infoValue}>৫০</Text></View>
+          </View>
+        </View>
+        {/* Right Card: OMR Preview & Buttons */}
+        <View style={[styles.card, styles.rightCard, isMobile && { width: '100%' }]}>
+          <View style={styles.previewCard}>
+            <Text style={styles.previewTitle}>ধারিকা</Text>
+            <View style={styles.previewFields}>
+              <View style={styles.previewFieldRow}><Text style={styles.previewLabel}>নাম:</Text><View style={styles.underline} /></View>
+              <View style={styles.previewFieldRow}><Text style={styles.previewLabel}>রোল:</Text><View style={styles.underline} /></View>
+              <View style={styles.previewFieldRow}><Text style={styles.previewLabel}>বিষয়:</Text><View style={styles.underline} /></View>
+              <View style={styles.previewFieldRow}><Text style={styles.previewLabel}>সেট:</Text><View style={styles.underline} /></View>
+            </View>
+            <View style={styles.omrBox}><Text style={styles.omrBoxText}>[OMR Sheet Preview]</Text></View>
+            <Text style={styles.omrSheetLabel}>OMR sheet</Text>
+          </View>
+          <View style={styles.buttonCol}>
+            <TouchableOpacity style={styles.downloadBtn}>
+              <Text style={styles.downloadBtnText}>Download PDF</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.downloadBtn}>
+              <Text style={styles.downloadBtnText}>Download Doc</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
+  container: { flex: 1, flexDirection: 'row', padding: 24, gap: 24, justifyContent: 'center' },
+  card: { backgroundColor: '#fff', borderRadius: 16, borderWidth: 1, borderColor: '#bbb', padding: 24, minWidth: 320, maxWidth: 500, flex: 1 },
+  leftCard: { marginRight: 0 },
+  rightCard: { alignItems: 'flex-end', justifyContent: 'space-between', flexDirection: 'row', gap: 16 },
+  cardHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  cardTitle: { fontSize: 24, fontWeight: 'bold' },
+  languageToggleRow: { flexDirection: 'row', gap: 8 },
+  languageBtn: { paddingVertical: 4, paddingHorizontal: 12, borderWidth: 1, borderColor: '#aaa', borderRadius: 8, marginLeft: 8 },
+  languageBtnText: { fontSize: 14 },
+  infoFields: { marginTop: 8 },
+  infoFieldRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  infoLabel: { fontSize: 16, minWidth: 90 },
+  infoValue: { fontSize: 16, fontWeight: 'bold', marginLeft: 8 },
+  underline: { flex: 1, borderBottomWidth: 1, borderBottomColor: '#aaa', marginLeft: 8, height: 16 },
+  previewCard: { flex: 1, alignItems: 'center', width: '70%' },
+  previewTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 12 },
+  previewFields: { width: '100%', marginBottom: 16 },
+  previewFieldRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+  previewLabel: { fontSize: 16, minWidth: 60 },
+  omrBox: { width: '100%', height: 60, borderWidth: 1, borderColor: '#bbb', borderRadius: 8, backgroundColor: '#f7f7f7', alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+  omrBoxText: { color: '#888' },
+  omrSheetLabel: { fontSize: 18, fontWeight: 'bold', marginTop: 8 },
+  buttonCol: { justifyContent: 'flex-start', alignItems: 'flex-end', marginLeft: 16 },
+  downloadBtn: { backgroundColor: '#e0e7ff', borderRadius: 8, paddingVertical: 12, paddingHorizontal: 24, marginBottom: 12, minWidth: 160, alignItems: 'center' },
+  downloadBtnText: { fontWeight: 'bold', fontSize: 16 },
 });
+
+export default OmrDownload;
