@@ -1,7 +1,7 @@
+import SplashScreenComponent from '@/components/SplashScreen';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { StoreProvider } from '@/providers/StoreProvider';
-import { useAuth } from '@/store/authStore';
 import tamaguiConfig from '@/tamagui.config';
 import { NotoSansBengali_100Thin } from '@expo-google-fonts/noto-sans-bengali/100Thin';
 import { NotoSansBengali_200ExtraLight } from '@expo-google-fonts/noto-sans-bengali/200ExtraLight';
@@ -37,7 +37,6 @@ export default function RootLayout() {
     NotoSansBengali_900Black
   });
 
-  // Simplified web font handling - moved before conditional return
   useEffect(() => {
     if (Platform.OS === "web") {
       const linkId = "google-font-noto-sans";
@@ -53,29 +52,26 @@ export default function RootLayout() {
   }, []);
 
   const AppContent = ({ children }: { children: ReactNode }) => {
-    const { isLoadingUser } = useAuth();
-
     useEffect(() => {
-      if ((fontsLoaded || fontError) && !isLoadingUser) {
+      if (fontsLoaded || fontError) {
         setTimeout(async () => {
           await SplashScreen.hideAsync();
         }, 100);
       }
-    }, [fontsLoaded, fontError, isLoadingUser]);
+    }, [fontsLoaded, fontError]);
+
+    if (!fontsLoaded) {
+      return <SplashScreenComponent />;
+    }
 
     return <>{children}</>;
   };
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {Platform.OS === "web" && (
         <Head>
           <title>Daricomma OMR</title>
-          {/* Add this meta tag to force light mode on web */}
           <meta name="color-scheme" content="light" />
         </Head>
       )}
@@ -84,8 +80,10 @@ export default function RootLayout() {
           <TamaguiProvider config={tamaguiConfig}>
             <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
               <AppContent>
-                <Stack>
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="index" />
+                  <Stack.Screen name="(auth)" />
+                  <Stack.Screen name="(private)" />
                   <Stack.Screen name="+not-found" />
                 </Stack>
                 <StatusBar style="auto" />

@@ -49,6 +49,34 @@ export const useLogin = () => {
       credentials: LoginStudentRequest | LoginEmailOtpRequest;
       role: UserRole;
     }) => {
+      // For dummy login, just return a mock response
+      if (credentials.username === 'dummy@test.com' || credentials.username.includes('@')) {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        return {
+          accessToken: 'dummy-access-token-123',
+          profile: {
+            _id: 'dummy-user-id',
+            userId: 'dummy-user-123',
+            username: credentials.username,
+            role: UserRole.STUDENT,
+            email: credentials.username,
+            firstName: 'John',
+            lastName: 'Doe',
+            avatar: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            readingLevel: 1,
+            xp: 0,
+            total_xp_needed_for_reward: 100,
+            wordMastery: 0,
+            onboarded: true,
+          } as User,
+        };
+      }
+
+      // Original API calls for real authentication
       switch (role) {
         case UserRole.STUDENT:
           return loginStudent(credentials as LoginStudentRequest);
@@ -69,7 +97,8 @@ export const useLogin = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: authQueryKeys.currentUser });
       AsyncStorage.setItem("accessToken", data.accessToken);
-      router.replace("/");
+      // Use replace to clear the navigation stack
+      router.replace("/(private)/(tabs)");
     },
   });
 };
